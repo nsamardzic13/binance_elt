@@ -1,0 +1,4 @@
+*terraform*
+lambda*.zip
+.venv
+lambda/config.yml
