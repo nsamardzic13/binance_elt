@@ -49,7 +49,6 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors_count_alarm" {
   namespace                 = "${var.project_name}-lambda-errors"
   period                    = 1500 # 25 min
   statistic                 = "SampleCount"
-  threshold                 = 80
   alarm_description         = "${aws_lambda_function.lambda_function.function_name} failed"
   insufficient_data_actions = []
   alarm_actions             = [aws_sns_topic.tf_binance_lambda.arn]
