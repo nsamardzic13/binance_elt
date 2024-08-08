@@ -2,11 +2,11 @@ resource "aws_cloudwatch_event_rule" "tf_cw_event_rule" {
   name        = "${var.project_name}-cw-event-rule-lambda"
   description = "Trigger on Lambda function invocation status changes"
   event_pattern = jsonencode({
-    "source" : ["aws.lambda"],
-    "detail-type" : ["Lambda Function Invocation Result"],
-    "detail" : {
-      "functionName" : ["${aws_lambda_function.lambda_function.function_name}"],
-      "status" : ["Failed", "Timeout"]
+    source      = ["aws.lambda"]
+    detail-type = ["Lambda Function Invocation Result"]
+    detail = {
+      functionName = ["${aws_lambda_function.lambda_function.function_name}"]
+      status       = ["FAILED", "TIMEOUT"]
     }
   })
 }
