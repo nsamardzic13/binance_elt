@@ -13,6 +13,7 @@ resource "aws_lambda_function" "lambda_function" {
   timeout       = 300
   role          = aws_iam_role.iam_role.arn
   filename      = data.archive_file.lambda.output_path
+  memory_size   = 256
 
   source_code_hash = data.archive_file.lambda.output_base64sha256
   layers           = var.lambda_layers

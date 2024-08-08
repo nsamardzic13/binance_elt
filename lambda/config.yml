@@ -1,0 +1,4 @@
+aws_binance_keys_secret_name: binance-keys
+aws_bq_secret_name: google_service_account
+aws_region: eu-central-1
+bq_dataset: CryptoPricing

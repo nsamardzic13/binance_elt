@@ -1,10 +1,16 @@
 from utils import BinanceHelper
 import schemas
+import logging
+
+logger = logging.getLogger()
+logger.setLevel("INFO")
 
 def lambda_handler(event,context):
-    print(event, context)
+    logger.info('### EVENT')
+    logger.info(event)
+    
     symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT"]
-    bh = BinanceHelper(config_path='config.yml')
+    bh = BinanceHelper()
     if event.get('schedule') == 'every_20_min':
         prices = bh.get_latest_ticker_prices(symbols)
         bh.insert_json_into_table(
@@ -21,4 +27,4 @@ def lambda_handler(event,context):
             schema=schemas.ticker_price_change_schema
         )
 
-# lambda_handler(None, None)
+# lambda_handler({'schedule': 'every_20_min'}, None)
