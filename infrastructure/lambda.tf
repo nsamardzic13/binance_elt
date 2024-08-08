@@ -15,12 +15,12 @@ resource "aws_lambda_function" "lambda_function" {
   filename      = data.archive_file.lambda.output_path
 
   source_code_hash = data.archive_file.lambda.output_base64sha256
-  environment {
-    variables = {
-      TARGET_EMAIL = "${var.sns_email_address}"
-    }
-  }
-  layers = var.lambda_layers
+  layers           = var.lambda_layers
+}
+
+resource "aws_cloudwatch_log_group" "lambda_log_group" {
+  name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
+  retention_in_days = 7
 }
 
 # CloudWatch Event rule for every 20 minutes
