@@ -47,7 +47,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors_count_alarm" {
   evaluation_periods        = 1
   metric_name               = aws_cloudwatch_log_metric_filter.lambda_log_errors_count_metric.name
   namespace                 = "${var.project_name}-lambda-errors"
-  period                    = 1500  # 25 min
+  period                    = 1500 # 25 min
   statistic                 = "SampleCount"
   threshold                 = 80
   alarm_description         = "${aws_lambda_function.lambda_function.function_name} failed"
