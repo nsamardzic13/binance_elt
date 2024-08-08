@@ -6,7 +6,7 @@ resource "aws_cloudwatch_event_rule" "tf_cw_event_rule" {
     detail-type = ["Lambda Function Invocation Result"]
     detail = {
       functionName = ["${aws_lambda_function.lambda_function.function_name}"]
-      status       = ["FAILED", "TIMEOUT"]
+      status       = ["ERROR", "FAILED", "TIMEOUT"]
     }
   })
 }
