@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_metric_filter" "lambda_log_errors_count_metric" {
 
   metric_transformation {
     name      = "${var.project_name}-error-count"
-    namespace = "Lambda errors"
+    namespace = "${var.project_name}-lambda-errors"
     value     = "1"
   }
 }
@@ -46,8 +46,8 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors_count_alarm" {
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = 1
   metric_name               = aws_cloudwatch_log_metric_filter.lambda_log_errors_count_metric.name
-  namespace                 = "Lambda errors"
-  period                    = 1500 # 25 min
+  namespace                 = "${var.project_name}-lambda-errors"
+  period                    = 1500  # 25 min
   statistic                 = "SampleCount"
   threshold                 = 80
   alarm_description         = "${aws_lambda_function.lambda_function.function_name} failed"
