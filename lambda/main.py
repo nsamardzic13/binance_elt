@@ -4,7 +4,7 @@ import schemas
 def lambda_handler(event,context):
     symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT"]
     bh = BinanceHelper(config_path='config.yml')
-    
+    print(event, context)
     if event.get('schedule') == 'every_20_min':
         prices = bh.get_latest_ticker_prices(symbols)
         bh.insert_json_into_table(
