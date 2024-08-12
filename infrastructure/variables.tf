@@ -15,3 +15,8 @@ variable "lambda_layers" {
     "arn:aws:lambda:eu-central-1:770693421928:layer:Klayers-p311-boto3:12"
   ]
 }
+
+variable "image_name" {
+  type    = string
+  default = "docker.io/nidjo13/binance_elt:latest"
+}

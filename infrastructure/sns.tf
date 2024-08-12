@@ -12,6 +12,23 @@ resource "aws_sns_topic_policy" "default" {
   policy = data.aws_iam_policy_document.sns_topic_policy.json
 }
 
+resource "aws_cloudwatch_metric_alarm" "lambda_errors_count_alarm" {
+  alarm_name                = "${var.project_name}-error-count-alarm"
+  comparison_operator       = "GreaterThanThreshold"
+  evaluation_periods        = 1
+  metric_name               = aws_cloudwatch_log_metric_filter.lambda_log_errors_count_metric.name
+  namespace                 = "${var.project_name}-lambda-errors"
+  period                    = 1200 # 20 min
+  statistic                 = "Sum"
+  threshold = 1
+  alarm_description         = "${aws_lambda_function.lambda_function.function_name} failed"
+  alarm_actions             = [aws_sns_topic.tf_binance_lambda.arn]
+
+  dimensions = {
+    FunctionName = aws_lambda_function.lambda_function.function_name
+  }
+}
+
 data "aws_iam_policy_document" "sns_topic_policy" {
   statement {
     effect  = "Allow"
