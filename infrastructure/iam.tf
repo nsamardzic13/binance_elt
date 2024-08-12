@@ -6,7 +6,6 @@ resource "aws_iam_role" "iam_role" {
       {
         Action = "sts:AssumeRole"
         Effect = "Allow"
-        Sid    = ""
         Principal = {
           Service = "lambda.amazonaws.com"
         }
@@ -14,10 +13,16 @@ resource "aws_iam_role" "iam_role" {
       {
         Action = "sts:AssumeRole"
         Effect = "Allow"
-        Sid    = ""
         Principal = {
           Service = "ecs-tasks.amazonaws.com"
         }
+      },
+      {
+        "Action" = "sts:AssumeRole"
+        "Effect" = "Allow",
+        "Principal" = {
+          "Service" = "scheduler.amazonaws.com"
+        },
       },
     ]
   })
