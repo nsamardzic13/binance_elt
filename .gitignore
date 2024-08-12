@@ -158,3 +158,4 @@ cython_debug/
 *terraform*
 lambda.zip
 .vscode
+dbt_binance/service_account.json

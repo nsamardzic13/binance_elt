@@ -39,7 +39,9 @@ resource "aws_iam_role_policy" "combined_policy" {
           "events:*",
           "athena:*",
           "lambda:*",
-          "secretsmanager:*"
+          "secretsmanager:*",
+          "iam:*",
+          "ecs:*"
         ],
         Resource = "*"
       }

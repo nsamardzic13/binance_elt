@@ -22,8 +22,9 @@ fi
 # fi
 
 # Setup and install packages
-cd dbt_project
+cd dbt_binance
 mkdir -p target/run && mkdir -p target/test
+
 dbt deps
 
 # Run dbt

@@ -7,6 +7,7 @@ resource "aws_sns_topic_subscription" "tf_user_updates_sqs_target" {
   protocol  = "email"
   endpoint  = var.sns_email_address
 }
+
 resource "aws_sns_topic_policy" "default" {
   arn    = aws_sns_topic.tf_binance_lambda.arn
   policy = data.aws_iam_policy_document.sns_topic_policy.json

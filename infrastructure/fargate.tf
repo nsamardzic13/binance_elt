@@ -7,7 +7,8 @@ resource "aws_ecs_cluster" "ecs" {
 }
 
 resource "aws_cloudwatch_log_group" "ecs_logs" {
-  name = "${var.project_name}-ecs-task-logs"
+  name              = "${var.project_name}-ecs-task-logs"
+  retention_in_days = 7
 }
 resource "aws_ecs_task_definition" "ecs_task" {
   family                   = var.project_name
@@ -46,4 +47,27 @@ resource "aws_ecs_task_definition" "ecs_task" {
       }]
     }
   ])
+}
+
+resource "aws_cloudwatch_event_rule" "ecs_schedule_rule" {
+  name                = "${var.project_name}-ecs-daily-schedule"
+  description         = "Run ECS task daily at 2 AM"
+  schedule_expression = "cron(0 2 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "ecs_task_target" {
+  rule     = aws_cloudwatch_event_rule.ecs_schedule_rule.name
+  arn      = aws_ecs_cluster.ecs.arn
+  role_arn = aws_iam_role.iam_role.arn
+
+  ecs_target {
+    task_definition_arn = aws_ecs_task_definition.ecs_task.arn
+    task_count          = 1
+    launch_type         = "FARGATE"
+    network_configuration {
+      subnets          = [aws_subnet.public_subnet[*].id]
+      security_groups  = [aws_security_group.tf_ecs_security_group[*].id]
+      assign_public_ip = true
+    }
+  }
 }
