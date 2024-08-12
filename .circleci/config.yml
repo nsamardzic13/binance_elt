@@ -1,9 +1,15 @@
 version: '2.1'
 orbs:
   terraform: circleci/terraform@3.2
+  docker: circleci/docker@2.6.0
 workflows:      
   deploy_infrastructure:
     jobs:
+      - docker/publish:
+          image: nidjo13/binance_elt
+          filters:
+            branches:
+              only: main
       - terraform/fmt:
           path: ./infrastructure
           checkout: true
