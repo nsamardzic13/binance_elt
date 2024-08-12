@@ -1,6 +1,7 @@
 dbt_binance:
+  target: prod
   outputs:
-    dev:
+    prod:
       dataset: "{{ env_var('GCP_BIGQUERY_DATASET') }}"
       job_execution_timeout_seconds: 2500
       job_retries: 1
@@ -11,4 +12,3 @@ dbt_binance:
       project: "{{ env_var('GCP_PROJECT') }}"
       threads: 4
       type: bigquery
-  target: prod
