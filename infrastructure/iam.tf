@@ -11,6 +11,14 @@ resource "aws_iam_role" "iam_role" {
           Service = "lambda.amazonaws.com"
         }
       },
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      },
     ]
   })
 }
