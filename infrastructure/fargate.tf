@@ -65,8 +65,8 @@ resource "aws_cloudwatch_event_target" "ecs_task_target" {
     task_count          = 1
     launch_type         = "FARGATE"
     network_configuration {
-      subnets          = [aws_subnet.public_subnet[*].id]
-      security_groups  = [aws_security_group.tf_ecs_security_group[*].id]
+      subnets          = ["${jsonencode(aws_subnet.public_subnet[*].id)}"]
+      security_groups  = ["${aws_security_group.tf_ecs_security_group.id}"]
       assign_public_ip = true
     }
   }
