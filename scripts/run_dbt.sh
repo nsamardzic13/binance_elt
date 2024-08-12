@@ -31,10 +31,6 @@ dbt deps
 dbt run --target-path target/run
 RUN_EXIT_CODE=$?
 
-# # Copy artifacts to S3
-# aws s3 cp target/run/manifest.json s3://$ARTIFACT_BUCKET_NAME/$S3_STORAGE_PREFIX/$ORCHESTRA_TASK_RUN_ID/run/manifest.json
-# aws s3 cp target/run/run_results.json s3://$ARTIFACT_BUCKET_NAME/$S3_STORAGE_PREFIX/$ORCHESTRA_TASK_RUN_ID/run/run_results_1.json
-
 # If run command failed. Exit early
 if [ $RUN_EXIT_CODE -ne 0 ]; then
   echo "dbt run failed"
@@ -44,10 +40,6 @@ fi
 # Run tests
 dbt test --target-path target/test
 TEST_EXIT_CODE=$?
-
-# # Copy artifacts to S3
-# aws s3 cp target/test/manifest.json s3://$ARTIFACT_BUCKET_NAME/$S3_STORAGE_PREFIX/$ORCHESTRA_TASK_RUN_ID/test/manifest.json
-# aws s3 cp target/test/run_results.json s3://$ARTIFACT_BUCKET_NAME/$S3_STORAGE_PREFIX/$ORCHESTRA_TASK_RUN_ID/test/run_results_2.json
 
 # exit with the test exit code
 echo "dbt run complete"
