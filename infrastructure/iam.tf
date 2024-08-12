@@ -38,15 +38,15 @@ resource "aws_iam_role_policy" "combined_policy" {
       {
         Effect = "Allow",
         Action = [
+          "iam:*",
           "logs:*",
           "s3:*",
           "sns:*",
+          "ecs:*",
           "events:*",
           "athena:*",
           "lambda:*",
-          "secretsmanager:*",
-          "iam:*",
-          "ecs:*"
+          "secretsmanager:*"
         ],
         Resource = "*"
       }

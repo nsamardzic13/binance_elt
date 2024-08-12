@@ -7,6 +7,7 @@ workflows:
     jobs:
       - docker/publish:
           image: nidjo13/binance_elt
+          tag: latest
           filters:
             branches:
               only: main
