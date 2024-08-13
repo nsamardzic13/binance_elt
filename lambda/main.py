@@ -9,7 +9,7 @@ def lambda_handler(event,context):
     logger.info('### EVENT')
     logger.info(event)
 
-    symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT"]
+    symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "ADAUSDT", "XRPUSDT", "DOTUSDT", "DOGEUSDT", "LTCUSDT", "LINKUSDT"]
     bh = BinanceHelper()
 
     if event.get('schedule') == 'every_20_min':
