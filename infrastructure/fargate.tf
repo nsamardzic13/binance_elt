@@ -52,7 +52,8 @@ resource "aws_ecs_task_definition" "ecs_task" {
 resource "aws_cloudwatch_event_rule" "ecs_schedule_rule" {
   name                = "${var.project_name}-ecs-daily-schedule"
   description         = "Run ECS task daily at 2 AM"
-  schedule_expression = "cron(0 2 * * ? *)"
+  # schedule_expression = "cron(0 2 * * ? *)"
+  schedule_expression = "cron(36 * * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "ecs_task_target" {
@@ -65,7 +66,7 @@ resource "aws_cloudwatch_event_target" "ecs_task_target" {
     task_count          = 1
     launch_type         = "FARGATE"
     network_configuration {
-      subnets          = ["${jsonencode(aws_subnet.public_subnet[*].id)}"]
+      subnets          = jsonencode(aws_subnet.public_subnet[*].id)
       security_groups  = ["${aws_security_group.tf_ecs_security_group.id}"]
       assign_public_ip = true
     }
