@@ -28,7 +28,7 @@ mkdir -p target/run && mkdir -p target/test
 dbt deps
 
 # Run dbt
-dbt run --target-path target/run
+dbt run --target-path target/run --exclude tag:static
 RUN_EXIT_CODE=$?
 
 # If run command failed. Exit early
