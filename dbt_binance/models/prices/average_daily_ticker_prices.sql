@@ -1,7 +1,7 @@
 {{
     config(
         materialized='incremental',
-        partition_by = {'field': 'id', 'data_type': 'string'}
+        unique_key = ['id']
     )
 }}
 
@@ -12,9 +12,11 @@ with recent_data as (
     select
         extract(date from timestamp) as date,
         symbol,
-        avg(price) as avg_price
+        round(avg(price), 2) as avg_price,
+        current_timestamp as updated_date
     from {{ source('CryptoPricing', 'ticker_prices') }}
     
+    -- limit to the last x days
     {% if is_incremental() %}
     
     where extract(date from timestamp) >= current_date - {{ days_to_ingest }}
@@ -29,10 +31,14 @@ with recent_data as (
 -- Generate unique surrogate key for recent data
 recent_data_with_id as (
     select
-        md5(cast(date as string) || '-' || symbol) as id,
+        {{ dbt_utils.generate_surrogate_key([
+            'date',
+            'symbol'
+        ]) }} as id,
         date,
         symbol,
-        avg_price
+        avg_price,
+        updated_date
     from recent_data
 )
 

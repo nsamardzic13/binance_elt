@@ -27,8 +27,16 @@ mkdir -p target/run && mkdir -p target/test
 
 dbt deps
 
+# Run dbt - full refresh on sunday
+# Check if today is Sunday
+if [ "$(date +%u)" -eq 7 ]; then
+  DBT_RUN_CMD="dbt run --target-path target/run --exclude tag:static --full-refresh"
+else
+  DBT_RUN_CMD="dbt run --target-path target/run --exclude tag:static"
+fi
+
 # Run dbt
-dbt run --target-path target/run --exclude tag:static
+$DBT_RUN_CMD
 RUN_EXIT_CODE=$?
 
 # If run command failed. Exit early

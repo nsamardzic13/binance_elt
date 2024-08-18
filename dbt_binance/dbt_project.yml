@@ -25,3 +25,4 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   dbt_binance:
     +materialized: table
+    +on_schema_change: "sync_all_columns"
