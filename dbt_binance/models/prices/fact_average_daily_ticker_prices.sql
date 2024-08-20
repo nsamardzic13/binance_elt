@@ -8,13 +8,15 @@
 with recent_data as (
     
     select
-        extract(date from tp.timestamp) as date,
         dt.id as symbol_id,
+        dd.id as date_id,
         round(avg(tp.price), 2) as avg_price,
         current_timestamp as updated_date
     from {{ source('CryptoPricing', 'ticker_prices') }} tp
     inner join {{ ref('dim_tickers') }} dt
         on tp.symbol = dt.symbol
+    inner join {{ ref('dim_date') }} dd
+        on dd.full_date = extract(date from tp.timestamp)
     
     -- limit to the last x days
     {% if is_incremental() %}
@@ -24,7 +26,7 @@ with recent_data as (
     {% endif %}
     
     group by 
-        date,
+        date_id,
         symbol_id
 ),
 
@@ -32,12 +34,13 @@ with recent_data as (
 recent_data_with_id as (
     select
         {{ dbt_utils.generate_surrogate_key([
-            'date',
-            'symbol_id'
+            'symbol_id',
+            'date_id',
+            'avg_price'
         ]) }} as id,
         symbol_id,
+        date_id,
         avg_price,
-        date,
         updated_date
     from recent_data
 ),
@@ -46,15 +49,15 @@ final as (
     select
         id,
         symbol_id,
+        date_id,
         avg_price,
-        date,
         updated_date,
         coalesce(
-            round(avg_price  - lag(avg_price) over (partition by symbol_id order by date), 2),
+            round(avg_price  - lag(avg_price) over (partition by symbol_id order by date_id), 2),
             0.0
         ) as price_change,
         coalesce(
-            round((avg_price - lag(avg_price) over (partition by symbol_id order by date)) / lag(avg_price) over (partition by symbol_id order by date) * 100, 2),
+            round((avg_price - lag(avg_price) over (partition by symbol_id order by date_id)) / lag(avg_price) over (partition by symbol_id order by date_id) * 100, 2),
             0.0
         ) as percentage_change
     from

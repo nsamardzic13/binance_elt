@@ -6,7 +6,7 @@
 }}
 
 SELECT
-    FORMAT_DATE('%F', d) as id,
+    CAST(FORMAT_DATE('%Y%m%d', d) AS INT64) as id,
     d AS full_date,
     EXTRACT(YEAR FROM d) AS year,
     EXTRACT(WEEK FROM d) AS year_week,
