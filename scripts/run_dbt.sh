@@ -26,6 +26,7 @@ cd dbt_binance
 mkdir -p target/run && mkdir -p target/test
 
 dbt deps
+dbt seed
 
 # Run dbt - full refresh on sunday
 # Check if today is Sunday

@@ -10,22 +10,24 @@
 with recent_data as (
     
     select
-        extract(date from timestamp) as date,
-        symbol,
-        round(avg(price), 2) as avg_price,
+        extract(date from tp.timestamp) as date,
+        dt.id as symbol_id,
+        round(avg(tp.price), 2) as avg_price,
         current_timestamp as updated_date
-    from {{ source('CryptoPricing', 'ticker_prices') }}
+    from {{ source('CryptoPricing', 'ticker_prices') }} tp
+    inner join {{ ref('dim_tickers') }} dt
+        on tp.symbol = dt.symbol
     
     -- limit to the last x days
     {% if is_incremental() %}
     
-    where extract(date from timestamp) >= current_date - {{ days_to_ingest }}
+    where extract(date from tp.timestamp) >= current_date - {{ days_to_ingest }}
     
     {% endif %}
     
     group by 
-        extract(date from timestamp),
-        symbol
+        date,
+        symbol_id
 ),
 
 -- Generate unique surrogate key for recent data
@@ -33,11 +35,11 @@ recent_data_with_id as (
     select
         {{ dbt_utils.generate_surrogate_key([
             'date',
-            'symbol'
+            'symbol_id'
         ]) }} as id,
-        date,
-        symbol,
+        symbol_id,
         avg_price,
+        date,
         updated_date
     from recent_data
 )
