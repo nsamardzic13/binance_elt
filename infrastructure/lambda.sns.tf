@@ -30,11 +30,11 @@ data "aws_iam_policy_document" "sns_topic_policy" {
 
 resource "aws_cloudwatch_metric_alarm" "lambda_errors_count_alarm" {
   alarm_name          = "${var.project_name}-lambda-error-count-alarm"
-  comparison_operator = "GreaterThanThreshold"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   metric_name         = "Errors"
   namespace           = "${var.project_name}-Lambda/Errors"
-  period              = 1200 # 20 min
+  period              = 900
   statistic           = "Sum"
   threshold           = 1
   alarm_description   = "${aws_lambda_function.lambda_function.function_name} failed"
