@@ -6,7 +6,6 @@
 }}
 
 with recent_data as (
-    
     select
         dt.id as symbol_id,
         dd.id as date_id,
@@ -18,7 +17,6 @@ with recent_data as (
     inner join {{ ref('dim_date') }} dd
         on dd.full_date = extract(date from tp.timestamp)
     
-    -- limit to the last x days
     {% if is_incremental() %}
     
     where extract(date from tp.timestamp) >= current_date - {{ days_to_ingest }}
@@ -30,7 +28,6 @@ with recent_data as (
         symbol_id
 ),
 
--- Generate unique surrogate key for recent data
 recent_data_with_id as (
     select
         {{ dbt_utils.generate_surrogate_key([

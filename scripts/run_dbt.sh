@@ -25,6 +25,7 @@ fi
 cd dbt_binance
 mkdir -p target/run && mkdir -p target/test
 
+# run deps and seed
 dbt deps
 dbt seed
 

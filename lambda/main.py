@@ -20,12 +20,12 @@ def lambda_handler(event,context):
             schema=schemas.ticker_prices_schema
         )
     elif event.get('schedule') == '2_times_a_day':
-        # volume = bh.get_ticker_price_change_24hrs(symbols)
-        # bh.insert_json_into_table(
-        #     table_name="ticker_price_change",
-        #     data=volume,
-        #     schema=schemas.ticker_price_change_schema
-        # )
+        volume = bh.get_ticker_price_change_24hrs(symbols)
+        bh.insert_json_into_table(
+            table_name="ticker_price_change",
+            data=volume,
+            schema=schemas.ticker_price_change_schema
+        )
 
         snapshot = bh.get_account_snapshot()
         bh.insert_json_into_table(
@@ -35,7 +35,7 @@ def lambda_handler(event,context):
         )
 
     else:
-        logger.error('Invalid event schedule')
-        raise
+        logger.error(f"Invalid event schedule: {event.get('schedule')}")
+        raise ValueError(f"Invalid event schedule: {event.get('schedule')}")
 
 # lambda_handler({'schedule': '2_times_a_day'}, None)
