@@ -71,3 +71,20 @@ resource "aws_cloudwatch_event_target" "ecs_task_target" {
     }
   }
 }
+
+# resource "aws_cloudwatch_metric_alarm" "ecs_task_failure" {
+#   alarm_name          = "${var.project_name}-ecs-task-failure-alarm"
+#   comparison_operator = "GreaterThanOrEqualToThreshold"
+#   evaluation_periods  = 1
+#   metric_name         = "EcsTaskFailures"
+#   namespace           = "AWS/ECS"
+#   period              = 300
+#   statistic           = "Sum"
+#   threshold           = 1
+#   alarm_description   = "${aws_ecs_cluster.ecs.name} failed"
+#   alarm_actions       = [aws_sns_topic.tf_binance_lambda.arn]
+
+#   dimensions = {
+#     ClusterName = aws_ecs_cluster.ecs.name
+#   }
+# }

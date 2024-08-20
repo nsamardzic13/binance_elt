@@ -67,3 +67,20 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_invoke_lambda_twice_a_day"
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.twice_a_day.arn
 }
+
+resource "aws_cloudwatch_metric_alarm" "lambda_errors_count_alarm" {
+  alarm_name          = "${var.project_name}-lambda-error-count-alarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 1
+  metric_name         = "Errors"
+  namespace           = "AWS/Lambda"
+  period              = 900
+  statistic           = "Sum"
+  threshold           = 1
+  alarm_description   = "${aws_lambda_function.lambda_function.function_name} failed"
+  alarm_actions       = [aws_sns_topic.tf_binance_lambda.arn]
+
+  dimensions = {
+    FunctionName = aws_lambda_function.lambda_function.function_name
+  }
+}
