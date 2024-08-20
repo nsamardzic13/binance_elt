@@ -32,3 +32,11 @@ ticker_price_change_schema = [
     bigquery.SchemaField("count", "INTEGER"),
     bigquery.SchemaField("timestamp", "TIMESTAMP", mode="REQUIRED"),
 ]
+
+account_snaphsote_schema = [
+    bigquery.SchemaField("id", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("asset", "STRING"),
+    bigquery.SchemaField("free", "FLOAT"),
+    bigquery.SchemaField("locked", "FLOAT"),
+    bigquery.SchemaField("timestamp", "TIMESTAMP", mode="REQUIRED"),
+]

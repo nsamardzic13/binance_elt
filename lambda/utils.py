@@ -51,7 +51,7 @@ class HelperMethods():
         return int(time.time() * 1000)
 
     def _create_signature(self, params) -> str:
-        query_string = '&'.join([f"{key}={params[key]}" for key in sorted(params)])
+        query_string = '&'.join([f"{key}={params[key]}" for key in params])
         return hmac.new(self._secret_key.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256).hexdigest()
     
     def _add_metadata(self, data: list) -> list:
@@ -140,7 +140,7 @@ class BinanceHelper(BqHelper):
         data = self._add_metadata(data)
         return data
 
-    def get_ticker_price_change_24hrs(self, symbols: Union[list, None] = None, type: str = 'MINI'):
+    def get_ticker_price_change_24hrs(self, symbols: Union[list, None] = None):
         params = {}
         if symbols:
             json_str = json.dumps(symbols, separators=(',', ':'))
@@ -152,5 +152,23 @@ class BinanceHelper(BqHelper):
             params=params
         )
 
+        data = self._add_metadata(data)
+        return data
+    
+    def get_account_snapshot(self, type: str = "SPOT"):
+        params = {
+            "type": type,
+            "timestamp": self._get_timestamp()
+        }
+        params["signature"] = self._create_signature(params)
+
+        data = self._get_json_response_get(
+            url=self._base_endpoint + '/sapi/v1/accountSnapshot',
+            headers=self._headers,
+            params=params
+        )
+
+        # specific
+        data = data['snapshotVos'][0].get('data').get('balances')
         data = self._add_metadata(data)
         return data

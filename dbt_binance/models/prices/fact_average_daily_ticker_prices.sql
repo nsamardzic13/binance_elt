@@ -42,7 +42,26 @@ recent_data_with_id as (
         date,
         updated_date
     from recent_data
+),
+
+price_changes as (
+    select
+        id,
+        symbol_id,
+        avg_price,
+        date,
+        updated_date,
+        coalesce(
+            round(avg_price  - lag(avg_price) over (partition by symbol_id order by date), 2),
+            0.0
+        ) as price_change,
+        coalesce(
+            round((avg_price - lag(avg_price) over (partition by symbol_id order by date)) / lag(avg_price) over (partition by symbol_id order by date) * 100, 2),
+            0.0
+        ) as percentage_change
+    from
+        recent_data_with_id
 )
 
 select *
-from recent_data_with_id
+from price_changes
