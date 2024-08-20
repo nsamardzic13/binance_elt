@@ -5,8 +5,6 @@
     )
 }}
 
-{% set days_to_ingest = var('days_to_ingest', 3) %}
-
 with recent_data as (
     
     select
@@ -44,7 +42,7 @@ recent_data_with_id as (
     from recent_data
 ),
 
-price_changes as (
+final as (
     select
         id,
         symbol_id,
@@ -64,4 +62,4 @@ price_changes as (
 )
 
 select *
-from price_changes
+from final

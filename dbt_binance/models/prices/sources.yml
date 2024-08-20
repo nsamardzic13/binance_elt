@@ -5,3 +5,4 @@ sources:
     tables:
       - name: ticker_price_change
       - name: ticker_prices
+      - name: account_snaphsot
