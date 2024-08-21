@@ -1,5 +1,5 @@
 resource "aws_sns_topic" "tf_binance_lambda" {
-  name = "${var.project_name}-sns-lambda"
+  name = "${var.project_name}-sns"
 }
 
 resource "aws_sns_topic_subscription" "tf_user_updates_sqs_target" {
@@ -12,6 +12,7 @@ resource "aws_sns_topic_policy" "default" {
   arn    = aws_sns_topic.tf_binance_lambda.arn
   policy = data.aws_iam_policy_document.sns_topic_policy.json
 }
+
 data "aws_iam_policy_document" "sns_topic_policy" {
   statement {
     effect  = "Allow"
@@ -20,7 +21,7 @@ data "aws_iam_policy_document" "sns_topic_policy" {
     principals {
       type = "Service"
       identifiers = [
-        "events.amazonaws.com"
+        "cloudwatch.amazonaws.com"
       ]
     }
 
