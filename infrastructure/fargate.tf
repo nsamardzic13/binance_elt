@@ -114,7 +114,9 @@ resource "aws_cloudwatch_event_rule" "container_stopped_rule" {
           "anything-but": 0
         }
       ],
-      "clusterArn" : "${aws_ecs_cluster.ecs.arn}"
+      "clusterArn" : [
+        "${aws_ecs_cluster.ecs.arn}"
+      ]
     }
   }
 }
