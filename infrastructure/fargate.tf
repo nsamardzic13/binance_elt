@@ -108,14 +108,14 @@ resource "aws_cloudwatch_event_rule" "container_stopped_rule" {
     "stoppedReason": [
       "Essential container in task exited"
     ],
+    "clusterArn" : [
+      "${aws_ecs_cluster.ecs.arn}"
+    ],
     "containers": {
       "exitCode": [
         {
           "anything-but": 0
         }
-      ],
-      "clusterArn" : [
-        "${aws_ecs_cluster.ecs.arn}"
       ]
     }
   }
