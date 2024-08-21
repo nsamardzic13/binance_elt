@@ -21,7 +21,7 @@ with current_portfolio as (
     
     {% if is_incremental() %}
     
-    and extract(date from a.timestamp) >= current_date - {{ days_to_ingest }}
+    and extract(date from a.timestamp) >= current_date - {{ var('days_to_ingest') }}
     
     {% endif %}
 

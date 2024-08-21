@@ -19,7 +19,7 @@ with recent_data as (
     
     {% if is_incremental() %}
     
-    where extract(date from tp.timestamp) >= current_date - {{ days_to_ingest }}
+    where extract(date from tp.timestamp) >= current_date - {{ var('days_to_ingest') }}
     
     {% endif %}
     
