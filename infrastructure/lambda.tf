@@ -78,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors_count_alarm" {
   statistic           = "Sum"
   threshold           = 1
   alarm_description   = "${aws_lambda_function.lambda_function.function_name} failed"
-  alarm_actions       = [aws_sns_topic.tf_binance_lambda.arn]
+  alarm_actions       = [aws_sns_topic.tf_sns_topic.arn]
 
   dimensions = {
     FunctionName = aws_lambda_function.lambda_function.function_name
