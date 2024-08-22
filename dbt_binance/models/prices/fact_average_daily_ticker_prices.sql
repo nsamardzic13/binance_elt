@@ -9,8 +9,7 @@ with recent_data as (
     select
         dt.id as symbol_id,
         dd.id as date_id,
-        round(avg(tp.price), 2) as avg_price,
-        current_timestamp as updated_date
+        round(avg(tp.price), 2) as avg_price
     from {{ source('CryptoPricing', 'ticker_prices') }} tp
     inner join {{ ref('dim_tickers') }} dt
         on tp.symbol = dt.symbol
@@ -24,8 +23,8 @@ with recent_data as (
     {% endif %}
     
     group by 
-        date_id,
-        symbol_id
+        symbol_id,
+        date_id
 ),
 
 recent_data_with_id as (
@@ -37,8 +36,7 @@ recent_data_with_id as (
         ]) }} as id,
         symbol_id,
         date_id,
-        avg_price,
-        updated_date
+        avg_price
     from recent_data
 ),
 
@@ -48,7 +46,6 @@ final as (
         symbol_id,
         date_id,
         avg_price,
-        updated_date,
         coalesce(
             round(avg_price  - lag(avg_price) over (partition by symbol_id order by date_id), 2),
             0.0
@@ -56,7 +53,8 @@ final as (
         coalesce(
             round((avg_price - lag(avg_price) over (partition by symbol_id order by date_id)) / lag(avg_price) over (partition by symbol_id order by date_id) * 100, 2),
             0.0
-        ) as percentage_change
+        ) as percentage_change,
+        current_timestamp as updated_timestamp
     from
         recent_data_with_id
 )

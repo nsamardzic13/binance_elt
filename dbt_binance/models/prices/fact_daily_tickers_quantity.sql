@@ -9,7 +9,7 @@ with current_portfolio as (
     select
         dt.id as symbol_id,
         dd.id as date_id,
-        a.free + a.locked as quantity
+        avg(a.free) + avg(a.locked) as quantity
     from {{ source('CryptoPricing', 'account_snaphsot') }} a
     inner join {{ ref('dim_tickers') }} dt
         on a.asset = dt.symbol_short
@@ -24,6 +24,10 @@ with current_portfolio as (
     
     {% endif %}
 
+    group by 
+        symbol_id,
+        date_id
+
 ),
 
 change as (
@@ -32,11 +36,11 @@ change as (
         date_id,
         quantity,
         coalesce(
-            round(quantity  - lag(quantity) over (order by date_id), 2),
+            round(quantity  - lag(quantity) over (partition by symbol_id order by date_id), 2),
             0.0
         ) as quantity_change,
         coalesce(
-            round((quantity - lag(quantity) over (order by date_id)) / lag(quantity) over (order by date_id) * 100, 2),
+            round((quantity - lag(quantity) over (partition by symbol_id  order by date_id)) / lag(quantity) over (partition by symbol_id  order by date_id) * 100, 2),
             0.0
         ) as percentage_change
     from current_portfolio
@@ -53,7 +57,8 @@ final as (
         date_id,
         quantity,
         quantity_change,
-        percentage_change
+        percentage_change,
+        current_timestamp as updated_timestamp
     from change
 )
 

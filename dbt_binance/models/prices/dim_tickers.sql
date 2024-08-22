@@ -27,7 +27,8 @@ final as (
         symbol,
         symbol_short,
         full_name,
-        start_timestamp
+        start_timestamp,
+        current_timestamp as updated_timestamp
     from ticker_names
 )
 

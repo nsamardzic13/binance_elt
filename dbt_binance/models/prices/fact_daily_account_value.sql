@@ -9,7 +9,7 @@ with current_portfolio as (
     select
         dt.id as symbol_id,
         dd.id as date_id,
-        a.free + a.locked as quantity
+        avg(a.free) + avg(a.locked) as quantity
     from {{ source('CryptoPricing', 'account_snaphsot') }} a
     inner join {{ ref('dim_tickers') }} dt
         on a.asset = dt.symbol_short
@@ -25,12 +25,16 @@ with current_portfolio as (
     
     {% endif %}
 
+    group by 
+        symbol_id,
+        date_id
+
 ),
 
 ticker_portflio_values as (
     select 
-        f.date_id,
-        avg_price * c.quantity as usd_value
+        c.date_id,
+        f.avg_price * c.quantity as usd_value
     from {{ ref('fact_average_daily_ticker_prices') }} f
     inner join current_portfolio c
         on f.symbol_id = c.symbol_id
@@ -69,7 +73,8 @@ final as (
         date_id,
         wallet_value,
         price_change,
-        percentage_change
+        percentage_change,
+        current_timestamp as updated_timestamp
     from total_value_change
 )
 
