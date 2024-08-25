@@ -12,7 +12,7 @@ jobs:
       - terraform/validate
       - terraform/plan
       - terraform/apply
-    working_directory: ./infrastrure/AWS
+    working_directory: ./infrastructure/AWS
   
   gcp_terraform:
     executor: terraform/default
@@ -27,7 +27,7 @@ jobs:
       - terraform/validate
       - terraform/plan
       - terraform/apply
-    working_directory: ./infrastrure/GCP
+    working_directory: ./infrastructure/GCP
 workflows:      
   deploy_infrastructure:
     jobs:
