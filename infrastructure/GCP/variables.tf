@@ -21,6 +21,6 @@ variable "project_name" {
 
 variable "credentials" {
   description = "Path to service account file"
-  type = string
-  default = "./service_account.json"
+  type        = string
+  default     = "./service_account.json"
 }

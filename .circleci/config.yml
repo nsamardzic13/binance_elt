@@ -20,13 +20,9 @@ jobs:
 
   gcp_terraform:
     executor: terraform/default
-    working_directory: ./infrastructure/GCP
     steps:
       - checkout
       - aws-cli/setup
-      - run:
-          name: Debug AWS CLI Configuration
-          command: aws configure list
       - run:
           name: Retrieve Secret from AWS Secrets Manager
           command: |
@@ -43,11 +39,11 @@ jobs:
 workflows:
   deploy_infrastructure:
     jobs:
-      # - docker/publish:
-      #     image: nidjo13/binance_elt
-      #     tag: latest
-      #     filters:
-      #       branches:
-      #         only: main
-      # - aws_terraform
+      - docker/publish:
+          image: nidjo13/binance_elt
+          tag: latest
+          filters:
+            branches:
+              only: main
+      - aws_terraform
       - gcp_terraform
