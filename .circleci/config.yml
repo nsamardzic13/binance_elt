@@ -7,34 +7,42 @@ orbs:
 jobs:
   aws_terraform:
     executor: terraform/default
-    working_directory: ./infrastructure/AWS
     steps:
       - checkout
-      - run:
-          name: List AWS Directory Contents
-          command: ls -la ./infrastructure/AWS
-      - terraform/fmt
-      - terraform/validate
-      - terraform/plan
-      - terraform/apply
+      - terraform/fmt:
+          path: ./infrastructure/AWS
+      - terraform/validate:
+          path: ./infrastructure/AWS
+      - terraform/plan:
+          path: ./infrastructure/AWS
+      - terraform/apply:
+          path: ./infrastructure/AWS
 
   gcp_terraform:
     executor: terraform/default
     working_directory: ./infrastructure/GCP
     steps:
       - checkout
-      - run:
-          name: List AWS Directory Contents
-          command: ls -la ./infrastructure/GCP
       - aws-cli/setup
+      - run:
+          name: Configure AWS CLI Region
+          command: |
+            aws configure set region $AWS_REGION_NAME
+      - run:
+          name: Debug AWS CLI Configuration
+          command: aws configure list
       - run:
           name: Retrieve Secret from AWS Secrets Manager
           command: |
             aws secretsmanager get-secret-value --secret-id google_service_account --query SecretString --output text > service_account.json
-      - terraform/fmt
-      - terraform/validate
-      - terraform/plan
-      - terraform/apply
+      - terraform/fmt:
+          path: ./infrastructure/GCP
+      - terraform/validate:
+          path: ./infrastructure/GCP
+      - terraform/plan:
+          path: ./infrastructure/GCP
+      - terraform/apply:
+          path: ./infrastructure/GCP
 
 workflows:
   deploy_infrastructure:
