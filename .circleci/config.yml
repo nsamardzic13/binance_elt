@@ -10,6 +10,9 @@ jobs:
     working_directory: ./infrastructure/AWS
     steps:
       - checkout
+      - run:
+          name: List AWS Directory Contents
+          command: ls -la ./infrastructure/AWS
       - terraform/fmt
       - terraform/validate
       - terraform/plan
@@ -20,6 +23,9 @@ jobs:
     working_directory: ./infrastructure/GCP
     steps:
       - checkout
+      - run:
+          name: List AWS Directory Contents
+          command: ls -la ./infrastructure/GCP
       - aws-cli/setup
       - run:
           name: Retrieve Secret from AWS Secrets Manager
