@@ -3,19 +3,21 @@ orbs:
   terraform: circleci/terraform@3.2
   docker: circleci/docker@2.6
   aws-cli: circleci/aws-cli@5.1
+
 jobs:
   aws_terraform:
     executor: terraform/default
+    working_directory: ./infrastructure/AWS
     steps:
-      - checkout 
+      - checkout
       - terraform/fmt
       - terraform/validate
       - terraform/plan
       - terraform/apply
-    working_directory: ./infrastructure/AWS
-  
+
   gcp_terraform:
     executor: terraform/default
+    working_directory: ./infrastructure/GCP
     steps:
       - checkout
       - aws-cli/setup
@@ -27,8 +29,8 @@ jobs:
       - terraform/validate
       - terraform/plan
       - terraform/apply
-    working_directory: ./infrastructure/GCP
-workflows:      
+
+workflows:
   deploy_infrastructure:
     jobs:
       # - docker/publish:
