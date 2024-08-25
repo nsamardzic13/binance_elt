@@ -10,7 +10,7 @@ with current_portfolio as (
         dt.id as symbol_id,
         dd.id as date_id,
         avg(a.free) + avg(a.locked) as quantity
-    from {{ source('CryptoPricing', 'account_snaphsot') }} a
+    from {{ source('BinanceCryptoDataset', 'account_snaphsot') }} a
     inner join {{ ref('dim_tickers') }} dt
         on a.asset = dt.symbol_short
     inner join {{ ref('dim_date') }} dd

@@ -10,7 +10,7 @@ with recent_data as (
         dt.id as symbol_id,
         dd.id as date_id,
         round(avg(tp.price), 2) as avg_price
-    from {{ source('CryptoPricing', 'ticker_prices') }} tp
+    from {{ source('BinanceCryptoDataset', 'ticker_prices') }} tp
     inner join {{ ref('dim_tickers') }} dt
         on tp.symbol = dt.symbol
     inner join {{ ref('dim_date') }} dd

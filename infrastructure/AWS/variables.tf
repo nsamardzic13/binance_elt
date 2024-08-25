@@ -33,5 +33,5 @@ variable "gcp_project" {
 
 variable "gcp_dataset" {
   type    = string
-  default = "CryptoPricing"
+  default = "BinanceCryptoDataset"
 }
