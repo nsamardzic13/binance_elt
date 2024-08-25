@@ -12,7 +12,7 @@ jobs:
       - terraform/validate
       - terraform/plan
       - terraform/apply
-    working_directory: ./AWS/infrastrure
+    working_directory: ./infrastrure/AWS
   
   gcp_terraform:
     executor: terraform/default
@@ -24,19 +24,18 @@ jobs:
           command: |
             aws secretsmanager get-secret-value --secret-id google_service_account --query SecretString --output text > service_account.json
       - terraform/fmt
-      - terraform/fmt
       - terraform/validate
       - terraform/plan
       - terraform/apply
-    working_directory: ./GCP/infrastrure
+    working_directory: ./infrastrure/GCP
 workflows:      
   deploy_infrastructure:
     jobs:
-      - docker/publish:
-          image: nidjo13/binance_elt
-          tag: latest
-          filters:
-            branches:
-              only: main
+      # - docker/publish:
+      #     image: nidjo13/binance_elt
+      #     tag: latest
+      #     filters:
+      #       branches:
+      #         only: main
       - aws_terraform
       - gcp_terraform
