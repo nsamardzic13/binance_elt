@@ -25,10 +25,12 @@ variable "bq_secret_arn" {
   type    = string
   default = "arn:aws:secretsmanager:eu-central-1:145598712427:secret:google_service_account-Hp5tkl"
 }
+
 variable "gcp_project" {
   type    = string
   default = "level-racer-394516"
 }
+
 variable "gcp_dataset" {
   type    = string
   default = "CryptoPricing"

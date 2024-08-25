@@ -1,7 +1,9 @@
 version: '2.1'
 orbs:
   terraform: circleci/terraform@3.2
-  docker: circleci/docker@2.6.0
+  docker: circleci/docker@2.6
+  aws-cli: circleci/aws-cli@5.1
+
 workflows:      
   deploy_infrastructure:
     jobs:
@@ -11,29 +13,95 @@ workflows:
           filters:
             branches:
               only: main
+
+      # AWS Infrastructure
       - terraform/fmt:
-          path: ./infrastructure
+          name: terraform/fmt-AWS
+          path: ./AWS/infrastructure
           checkout: true
           context: terraform
           filters:
             branches:
               only: main
+
       - terraform/validate:
-          path: ./infrastructure
+          name: terraform/validate-AWS
+          path: ./AWS/infrastructure
           checkout: true
           context: terraform
           requires:
-            - terraform/fmt
+            - terraform/fmt-AWS
+
       - terraform/plan:
-          path: ./infrastructure
+          name: terraform/plan-AWS
+          path: ./AWS/infrastructure
           checkout: true
           context: terraform
           persist-workspace: true
           requires:
-            - terraform/validate
+            - terraform/validate-AWS
+
       - terraform/apply:
-          path: ./infrastructure
+          name: terraform/apply-AWS
+          path: ./AWS/infrastructure
           attach-workspace: true
           context: terraform
           requires:
-            - terraform/plan
+            - terraform/plan-AWS
+
+      # GCP Infrastructure
+      - terraform/fmt:
+          name: terraform/fmt-GCP
+          path: ./GCP/infrastructure
+          checkout: true
+          context: terraform
+          filters:
+            branches:
+              only: main
+
+      - terraform/validate:
+          name: terraform/validate-GCP
+          path: ./GCP/infrastructure
+          checkout: true
+          context: terraform
+          requires:
+            - terraform/fmt-GCP
+
+      - terraform/plan:
+          name: terraform/plan-GCP
+          path: ./GCP/infrastructure
+          checkout: true
+          context: terraform
+          persist-workspace: true
+          requires:
+            - terraform/validate-GCP
+          steps:
+            - aws-cli/setup:
+                aws-access-key-id: AWS_ACCESS_KEY_ID
+                aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+                aws-region: AWS_REGION
+            - run:
+                name: Fetch GCP Service Account JSON from AWS Secrets Manager
+                command: |
+                  aws secretsmanager get-secret-value --secret-id google_service_account --query 'SecretString' --output text > ./GCP/infrastructure/service_account.json
+            - terraform/plan:
+                extra_args: "-var 'credentials=./GCP/infrastructure/service_account.json'"
+
+      - terraform/apply:
+          name: terraform/apply-GCP
+          path: ./GCP/infrastructure
+          attach-workspace: true
+          context: terraform
+          requires:
+            - terraform/plan-GCP
+          steps:
+            - aws-cli/setup:
+                aws-access-key-id: AWS_ACCESS_KEY_ID
+                aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+                aws-region: AWS_REGION
+            - run:
+                name: Fetch GCP Service Account JSON from AWS Secrets Manager
+                command: |
+                  aws secretsmanager get-secret-value --secret-id google_service_account --query 'SecretString' --output text > ./GCP/infrastructure/service_account.json
+            - terraform/apply:
+                extra_args: "-var 'credentials=./GCP/infrastructure/service_account.json'"

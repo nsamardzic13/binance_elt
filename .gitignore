@@ -158,5 +158,5 @@ cython_debug/
 *terraform*
 lambda.zip
 .vscode
-dbt_binance/service_account.json
+service_account.json
 dbt_binance/.user.yml
