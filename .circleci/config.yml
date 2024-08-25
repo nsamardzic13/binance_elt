@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Retrieve Secret from AWS Secrets Manager
           command: |
-            aws secretsmanager get-secret-value --secret-id google_service_account --query SecretString --output text > service_account.json
+            aws secretsmanager get-secret-value --region $AWS_REGION_NAME --secret-id google_service_account --query SecretString --output text > ./infrastructure/GCP/service_account.json
       - terraform/fmt:
           path: ./infrastructure/GCP
       - terraform/validate:
