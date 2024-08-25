@@ -2,6 +2,6 @@ terraform {
   backend "gcs" {
     bucket      = "tf-my-backend-bucket"
     prefix      = "terraform/state"
-    credentials = var.credentials
+    credentials = "service_account.json"
   }
 }
