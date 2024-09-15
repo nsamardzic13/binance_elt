@@ -31,11 +31,29 @@ with current_portfolio as (
 
 ),
 
+avg_daily_ticker_prices as (
+    select 
+        symbol_id,
+        date_id,
+        round(avg(price), 2) as avg_price
+    from {{ ref('fact_ticker_prices') }} 
+
+    {% if is_incremental() %}
+    
+    where extract(date from timestamp) >= current_date - {{ var('days_to_ingest') }}
+    
+    {% endif %}
+
+    group by 
+        symbol_id,
+        date_id
+),
+
 ticker_portflio_values as (
     select 
         c.date_id,
         f.avg_price * c.quantity as usd_value
-    from {{ ref('fact_average_daily_ticker_prices') }} f
+    from avg_daily_ticker_prices f
     inner join current_portfolio c
         on f.symbol_id = c.symbol_id
         and f.date_id = c.date_id

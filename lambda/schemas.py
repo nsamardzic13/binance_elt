@@ -1,4 +1,4 @@
-from google.cloud import bigquery  
+from google.cloud import bigquery
 
 ticker_prices_schema = [
     bigquery.SchemaField("id", "STRING", mode="REQUIRED"),
