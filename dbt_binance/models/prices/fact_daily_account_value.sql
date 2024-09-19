@@ -40,7 +40,7 @@ avg_daily_ticker_prices as (
 
     {% if is_incremental() %}
     
-    where extract(date from timestamp) >= current_date - {{ var('days_to_ingest') }}
+    where extract(date from open_time) >= current_date - {{ var('days_to_ingest') }}
     
     {% endif %}
 

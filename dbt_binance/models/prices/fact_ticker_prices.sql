@@ -50,7 +50,8 @@ recent_data_with_id as (
         {{ dbt_utils.generate_surrogate_key([
             'symbol_id',
             'date_id',
-            'price'
+            'price',
+            'open_time'
         ]) }} as id,
         symbol_id,
         date_id,
