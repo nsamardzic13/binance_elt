@@ -168,6 +168,6 @@ class BinanceHelper(BqHelper):
         )
 
         # specific
-        data = data["snapshotVos"][0].get("data").get("balances")
+        data = data["snapshotVos"][-1].get("data").get("balances")
         data = self._add_metadata(data)
         return data
