@@ -24,7 +24,7 @@ def lambda_handler(event, context):
     ]
     bh = BinanceHelper()
 
-    if event.get("schedule") == "every_20_min":
+    if event.get("schedule") == "every_30_min":
         prices = bh.get_latest_ticker_prices(symbols)
         bh.insert_json_into_table(
             table_name="ticker_prices", data=prices, schema=schemas.ticker_prices_schema

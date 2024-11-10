@@ -1,23 +1,23 @@
-# CloudWatch Event rule for every 20 minutes
-resource "aws_cloudwatch_event_rule" "every_20_minutes" {
-  name                = "${var.project_name}-every-20-minutes"
-  description         = "Triggers Lambda function every 20 minutes"
-  schedule_expression = "rate(20 minutes)"
+# CloudWatch Event rule for every 30 minutes
+resource "aws_cloudwatch_event_rule" "every_30_minutes" {
+  name                = "${var.project_name}-every-30-minutes"
+  description         = "Triggers Lambda function every 30 minutes"
+  schedule_expression = "rate(30 minutes)"
 }
 
-resource "aws_cloudwatch_event_target" "lambda_target_every_20_minutes" {
-  rule      = aws_cloudwatch_event_rule.every_20_minutes.name
-  target_id = "lambda-schedule-every-20-minutes"
+resource "aws_cloudwatch_event_target" "lambda_target_every_30_minutes" {
+  rule      = aws_cloudwatch_event_rule.every_30_minutes.name
+  target_id = "lambda-schedule-every-30-minutes"
   arn       = aws_lambda_function.lambda_function.arn
-  input     = jsonencode({ "schedule" : "every_20_min" })
+  input     = jsonencode({ "schedule" : "every_30_min" })
 }
 
-resource "aws_lambda_permission" "allow_cloudwatch_to_invoke_lambda_every_20_minutes" {
-  statement_id  = "AllowExecutionFromCloudWatchEvery20Minutes"
+resource "aws_lambda_permission" "allow_cloudwatch_to_invoke_lambda_every_30_minutes" {
+  statement_id  = "AllowExecutionFromCloudWatchEvery30Minutes"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_function.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.every_20_minutes.arn
+  source_arn    = aws_cloudwatch_event_rule.every_30_minutes.arn
 }
 
 # CloudWatch Event rule for twice a day (noon and midnight)
