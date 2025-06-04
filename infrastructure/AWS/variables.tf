@@ -23,7 +23,7 @@ variable "image_name" {
 
 variable "bq_secret_arn" {
   type    = string
-  default = "arn:aws:secretsmanager:eu-central-1:145598712427:secret:google_service_account-Hp5tkl"
+  default = "arn:aws:secretsmanager:eu-central-1:145598712427:secret:google_service_account-MVZvx6"
 }
 
 variable "gcp_project" {
