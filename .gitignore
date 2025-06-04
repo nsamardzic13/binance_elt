@@ -160,3 +160,4 @@ lambda.zip
 .vscode
 service_account.json
 dbt_binance/.user.yml
+.DS_Store
