@@ -161,3 +161,4 @@ lambda.zip
 service_account.json
 dbt_binance/.user.yml
 .DS_Store
+.todo

@@ -1,6 +1,7 @@
-from utils import BinanceHelper
-import schemas
 import logging
+
+import schemas
+from utils import BinanceHelper
 
 logger = logging.getLogger()
 logger.setLevel("INFO")

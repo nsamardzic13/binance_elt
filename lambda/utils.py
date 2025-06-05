@@ -1,15 +1,15 @@
+import hashlib
+import hmac
+import json
 import os
+import time
+import uuid
+from datetime import datetime
+from typing import Union
+
+import boto3
 import requests
 import yaml
-import json
-import hmac
-import hashlib
-import time
-import boto3
-import json
-import uuid
-from typing import Union
-from datetime import datetime
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
